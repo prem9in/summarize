@@ -15,12 +15,14 @@ export default class Sentiment extends Base {
     render() {
         let initialized = sentiment.get("initialized");
         if (initialized) {
-            let score = sentiment.get("initialized") ? sentiment.get("Score") : -1;
+            let score = sentiment.get("Score");
+            let error = sentiment.get("Error");
             return (
                 <div className="main">
                     <div className="panel-title">{this.props.resources.getString("SentimentTitle")}</div>
                     <div className="separator-blue"></div>
                     <p>{score < 0 ? this.props.resources.getString('NoSentimentScore') : score}</p>
+                    <p className={(error && error.length > 0) ? "alert-warning error" : "displaynone"}>{error}</p>
                 </div>
             );
         } else {

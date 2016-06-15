@@ -15,12 +15,14 @@ export default class Phrases extends Base {
     render() {
         let initialized = phrases.get("initialized");
         if (initialized) {
-            let words = initialized ? phrases.get("KeyPhrases") : [];
+            let words = phrases.get("KeyPhrases");
+            let error = phrases.get("Error");
             return (
                 <div className="main">
                     <div className="panel-title">{this.props.resources.getString("PhraseTitle")}</div>
                     <div className="separator-blue"></div>
                     <p>{(words && words.length > 0) ? words.join(', ') : this.props.resources.getString('NoPhrases')}</p>
+                    <p className={(error && error.length > 0) ? "alert-warning error" : "displaynone"}>{error}</p>
                 </div>
             );
         } else {

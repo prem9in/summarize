@@ -9,6 +9,7 @@ const newlinePattern2 = /\n+/igm;
 const tabPattern = /\t+/igm;
 const copyright = /copyright/igm;
 const copyrightsym = /©/igm;
+const maxLength = 5 * 1000; // less than 10Kb
 
 class TextDocument extends Base {
 
@@ -21,7 +22,7 @@ class TextDocument extends Base {
     }
 
     defaults() {
-        return {"Inputs":[{"Id": "1", "Text": ""}]};
+        return {"Inputs":[{"Id": "1", "Text": ""}], "initialized": false};
     }
 
     fetch(url) {
@@ -50,9 +51,12 @@ class TextDocument extends Base {
                 .replace(copyright, '')
                 .replace(copyrightsym, '');
             let text = $(response).text().trim();
-            return {"Inputs":[{"Id": "1", "Text": text}]};
+            if (text.length > maxLength) {
+                text = text.substring(0, maxLength);
+            }
+            return {"Inputs":[{"Id": "1", "Text": text}], "initialized": true};
         } else {
-            return this.defaults();
+            return {"Inputs":[{"Id": "1", "Text": ""}], "initialized": true};
         }
     }
 

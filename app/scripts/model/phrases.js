@@ -16,7 +16,8 @@ class Phrases extends Base {
     defaults() {
         return {
             "KeyPhrases": [],
-            "initialized": false
+            "initialized": false,
+            "Error": null
         }
     }
 
@@ -26,9 +27,11 @@ class Phrases extends Base {
 
     parse(response, options) {
         if (response && response.KeyPhrasesBatch && response.KeyPhrasesBatch.length > 0) {
-            return {KeyPhrases: response.KeyPhrasesBatch[0].KeyPhrases, initialized: true};
+            return {KeyPhrases: response.KeyPhrasesBatch[0].KeyPhrases, initialized: true, Error: null};
+        } else if (response && response.Errors && response.Errors.length > 0) {
+            return {KeyPhrases: [], initialized: true, Error: response.Errors[0].Message};
         } else {
-            return {KeyPhrases: [], initialized: true};
+            return {KeyPhrases: [], initialized: true, Error: null};
         }
     }
 

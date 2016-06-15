@@ -16,7 +16,8 @@ class Sentiment extends Base {
     defaults() {
         return {
            "Score": -1,
-            "initialized": false
+            "initialized": false,
+            "Error": null
         }
     }
 
@@ -26,9 +27,11 @@ class Sentiment extends Base {
 
     parse(response, options) {
         if (response && response.SentimentBatch && response.SentimentBatch.length > 0) {
-            return {Score: response.SentimentBatch[0].Score, initialized: true};
+            return {Score: response.SentimentBatch[0].Score, initialized: true, Error: null};
+        } else if (response && response.Errors && response.Errors.length > 0) {
+            return {Score: -1, initialized: true, Error: response.Errors[0].Message};
         } else {
-            return {Score: -1, initialized: true};
+            return {Score: -1, initialized: true, Error: null};
         }
     }
 

@@ -15,7 +15,7 @@ class Helper {
                 'Authorization': 'Basic ' + appconfig.apikey,
             },
             method: 'execute',
-            model: textDocument.attributes,
+            model: {"Inputs": textDocument.attributes.Inputs},
             contentType: 'application/json',
             dataType: 'json',
             skipCache: true

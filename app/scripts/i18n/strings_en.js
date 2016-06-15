@@ -21,6 +21,10 @@ class Resources {
         this.resources.set('AnalyzeComplete', 'Summarize finished analyzing the document.');
         this.resources.set('SentimentGetFailed', 'Summarize could not determine overall sentiment for this document');
         this.resources.set('PhraseGetFailed', 'Summarize could not determine key phrases in document');
+        this.resources.set('TextDocumentTitle', 'Extracted text from source');
+        this.resources.set('NoTextDocument', 'Extracted text from source has no content.');
+        this.resources.set('TextDocumentLength', 'Length: ');
+        this.resources.set('TextDocumentChars', ' characters');
     }
    
     getString(key) {
