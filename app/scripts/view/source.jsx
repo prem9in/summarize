@@ -2,6 +2,7 @@ import React from 'react';
 import Base from 'view/base';
 import textDocument from 'model/textdocument';
 import uistatus from 'model/uistatus';
+import Extractor from 'view/extractor';
 
 'use strict';
 
@@ -59,7 +60,10 @@ export default class Source extends Base {
                     <label for="sourceInput">{this.props.resources.getString("sourceinputlabel")}</label>
                     <input type="text" id="sourceInput" onChange={this.validate.bind(this)} className="sourceInput form-control" placeholder={this.props.resources.getString("sourceinputplaceholder")} title={this.props.resources.getString("sourceinputplaceholder")} />
 			    </div>
-                <button className="btn btn-primary" onClick={this.getDocument.bind(this)}>{this.props.resources.getString("sourceSubmit")}</button>
+                <Extractor />
+                <div className="form-group">
+                    <button className="btn btn-primary" onClick={this.getDocument.bind(this)}>{this.props.resources.getString("sourceSubmit")}</button>
+                </div>
            </div>
         );
     }

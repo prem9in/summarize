@@ -1,6 +1,7 @@
 import Backbone from 'backbone';
 import Base from 'model/base';
 import $ from 'jquery';
+import extractor from 'model/extractor';
 
 'use strict';
 
@@ -25,13 +26,29 @@ class TextDocument extends Base {
         return {"Inputs":[{"Id": "1", "Text": ""}], "initialized": false};
     }
 
+    //// this will work only in case when document.domain is same.
+    fetchbyIframe(options) {
+        let docloader = $('#docloader');
+        if (!docloader || docloader.length == 0) {
+            $('div class="displaynone"><iframe id="documentLoader"></iframe></div>').appendTo('body');
+        }
+        docloader = $('#docloader');
+        docloader.on('load', ()=>{
+            let resp = docloader.contents().html();
+            this.set(this.parse(resp, options));
+        });
+        docloader.attr('src', url);
+    }
+
     fetch(url) {
-        return super.fetch({
+        let options = {
             url: url,
             useProxy: true,
             dataType: 'html',
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
-        });
+        };
+        //// this.fetchbyIframe(options);
+        return super.fetch(options);
     }
 
     parse(response, options) {
@@ -50,7 +67,7 @@ class TextDocument extends Base {
                 .replace(tabPattern, '')
                 .replace(copyright, '')
                 .replace(copyrightsym, '');
-            let text = $(response).text().trim();
+            let text = extractor.extract(response, options.url);
             if (text.length > maxLength) {
                 text = text.substring(0, maxLength);
             }

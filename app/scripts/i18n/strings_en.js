@@ -25,6 +25,15 @@ class Resources {
         this.resources.set('NoTextDocument', 'Extracted text from source has no content.');
         this.resources.set('TextDocumentLength', 'Length: ');
         this.resources.set('TextDocumentChars', ' characters');
+        this.resources.set('AutoDetect', 'Auto Detect');
+        this.resources.set('HindustanTimes', 'Hindustan Times');
+        this.resources.set('FinancialExpress', 'Financial Express');
+        this.resources.set('Custom', 'Custom');
+        this.resources.set('SelectExtractor', 'Select extractor:');
+        this.resources.set('Selector', 'Selector');
+        this.resources.set('SelectorPlaceholder', 'CSS selector for content root element.');
+        this.resources.set('IgnorePhrase', 'Ignore Phrases');
+        this.resources.set('IgnorePhrasePlaceholder', 'Comma separated Phrases/Keywords to be ignored.');
     }
    
     getString(key) {

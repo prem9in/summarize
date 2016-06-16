@@ -1,5 +1,6 @@
 import Base from 'model/base';
 import helper from 'service/helper';
+import extractor from 'model/extractor';
 
 'use strict';
 
@@ -27,7 +28,9 @@ class Phrases extends Base {
 
     parse(response, options) {
         if (response && response.KeyPhrasesBatch && response.KeyPhrasesBatch.length > 0) {
-            return {KeyPhrases: response.KeyPhrasesBatch[0].KeyPhrases, initialized: true, Error: null};
+            let kphrases = response.KeyPhrasesBatch[0].KeyPhrases;
+            kphrases = extractor.ignorePhrases(kphrases);
+            return {KeyPhrases: kphrases, initialized: true, Error: null};
         } else if (response && response.Errors && response.Errors.length > 0) {
             return {KeyPhrases: [], initialized: true, Error: response.Errors[0].Message};
         } else {

@@ -13,8 +13,7 @@ var amdOptimize = require('amd-optimize');
 var exec = require('child_process').exec;
 var fs = require('fs');
 
-var uglifyFlag = false; // dev environment
-// var uglifyFlag = process.env.uglify == 'false' ? false : true;
+var uglifyFlag = process.env.uglify == 'true' ? true : false;
 
 var outfile = "app.js";
 
@@ -146,7 +145,7 @@ gulp.task('compile', function() {
 });
 
 gulp.task('compress', function() {
-  log('Scripts minified.');
+  log('Uglify bit set. Scripts minified.');
   return gulp.src(destdir + '\\' + outfile)
     .pipe(uglify())
     .pipe(gulp.dest(destdir));
@@ -175,6 +174,8 @@ gulp.task('publish', function() {
 var taskArray = ['copy-require', 'copy-lib-js', 'copy-lib-css', 'copy-fonts', 'compile','compile-less'];
 if (uglifyFlag) {
   taskArray.push('compress');
+} else {
+    log('Uglify bit NOT set. Scripts will NOT be minified.');
 }
 taskArray.push('setglobal');
 taskArray.push('publish');
