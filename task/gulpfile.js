@@ -136,11 +136,11 @@ gulp.task('copy-lib-css', function() {
 // compile from ES6 to ES5
 gulp.task('compile', function() {
     return gulp.src(srcpatterns)
-        .pipe(sourcemaps.init({loadMaps: false}))
+     //   .pipe(sourcemaps.init({loadMaps: false}))
     .pipe(babel({'modules': 'amd'}))
     .pipe(amdOptimize(baseModule, amdOptions))
     .pipe(concat(outfile))
-        .pipe(sourcemaps.write())
+     //   .pipe(sourcemaps.write())
     .pipe(gulp.dest(destdir));
 });
 

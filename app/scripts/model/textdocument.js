@@ -5,13 +5,6 @@ import extractor from 'model/extractor';
 
 'use strict';
 
-const newlinePattern = /[\r\n]+/igm;
-const newlinePattern2 = /\n+/igm;
-const tabPattern = /\t+/igm;
-const copyright = /copyright/igm;
-const copyrightsym = /©/igm;
-const maxLength = 5 * 1000; // less than 10Kb
-
 class TextDocument extends Base {
 
     get idAttribute() {
@@ -23,7 +16,12 @@ class TextDocument extends Base {
     }
 
     defaults() {
-        return {"Inputs":[{"Id": "1", "Text": ""}], "initialized": false};
+        return {
+            "Summary": "",
+            "Title": "",
+            "Content": "",
+            "initialized": false
+        };
     }
 
     //// this will work only in case when document.domain is same.
@@ -53,27 +51,21 @@ class TextDocument extends Base {
 
     parse(response, options) {
         if (response) {
-            response = response.substring(response.indexOf('<body'), response.indexOf('</body>'));
-            response = this.removeTagElements(response, 'script');
-            response = this.removeTagElements(response, 'a');
-            response = this.removeTagElements(response, 'noscript');
-            response = this.removeTagElements(response, 'ul');
-            response = this.removeTagElements(response, 'ol');
-            response = this.removeTagElements(response, 'style');
-            response = this.removeTagElements(response, 'link', true);
-            response = this.removeTagElements(response, 'img', true);
-            response = response.replace(newlinePattern, ' ')
-                .replace(newlinePattern2, ' ')
-                .replace(tabPattern, '')
-                .replace(copyright, '')
-                .replace(copyrightsym, '');
-            let text = extractor.extract(response, options.url);
-            if (text.length > maxLength) {
-                text = text.substring(0, maxLength);
-            }
-            return {"Inputs":[{"Id": "1", "Text": text}], "initialized": true};
+            response = response.substring(response.indexOf('<body'), response.indexOf('</body>') + 7);
+            let result = extractor.extract(response, options.url);
+            return {
+                "Summary": result.summary,
+                "Title": result.title,
+                "Content": result.content,
+                "initialized": true
+            };
         } else {
-            return {"Inputs":[{"Id": "1", "Text": ""}], "initialized": true};
+            return {
+                "Summary": "",
+                "Title": "",
+                "Content": "",
+                "initialized": true
+            };
         }
     }
 

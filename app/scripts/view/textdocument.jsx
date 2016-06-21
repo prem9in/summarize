@@ -15,19 +15,19 @@ export default class TextDocument extends Base {
     render() {
         let initialized = textDocument.get('initialized');
         if (initialized) {
-            let inputs = textDocument.get('Inputs');
-            if (inputs && inputs.length > 0) {
+            let title = textDocument.get('Title');
+            let content = textDocument.get('Content');
                 return (
                     <div className="main">
                         <div className="panel-title">{this.props.resources.getString('TextDocumentTitle')}</div>
                         <div className="separator-blue"></div>
-                        <p className="sourceDoc">{(inputs[0].Text && inputs[0].Text.length) > 0 ? inputs[0].Text : this.props.resources.getString('NoTextDocument')}</p>
-                        <p className="sourceLength">{this.props.resources.getString('TextDocumentLength') + inputs[0].Text.length + this.props.resources.getString('TextDocumentChars')}</p>
+                        <p className="sourceDoc"><span>{this.props.resources.getString('TitleDocument')}</span>{(title && title.length) > 0 ? title : this.props.resources.getString('NoTextDocument')}</p>
+                        <p className="sourceLength">{this.props.resources.getString('TitleTextDocumentLength') + title.length + this.props.resources.getString('TextDocumentChars')}</p>
+                        <div className="separator-grey"></div>
+                        <p className="sourceDoc">{(content && content.length) > 0 ? content : this.props.resources.getString('NoTextDocument')}</p>
+                        <p className="sourceLength">{this.props.resources.getString('TextDocumentLength') + content.length + this.props.resources.getString('TextDocumentChars')}</p>
                     </div>
                 );
-            } else {
-                return (<Empty />);
-            }
         } else {
             return (<Empty />);
         }

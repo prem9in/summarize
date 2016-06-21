@@ -4,6 +4,14 @@
 import extractorConfig from 'model/extractorconfig';
 import _ from 'underscore';
 
+const newlinePattern = /[\r\n]+/igm;
+const newlinePattern2 = /\n+/igm;
+const tabPattern = /\t+/igm;
+const copyright = /copyright/igm;
+const copyrightsym = /©/igm;
+const maxLength = 5 * 1000; // less than 10Kb
+const removeselector = 'script,img,link,a,rel,ul,ol,li';
+
 class Extractor {
 
     defaults() {
@@ -48,12 +56,43 @@ class Extractor {
             extractorDetected = this.attributes.selected;
         }
 
-        let resultContent = $(content);
-        if (extractorDetected && extractorDetected.selector) {
-            resultContent = resultContent.find(extractorDetected.selector)
+        let docContent = $(content);
+        let resultContent = $('<div></div>');
+        let titleContent = $('<div></div>');
+        let summaryContent = $('<div></div>');
+        if (extractorDetected) {
+            if (extractorDetected.titleSelector) {
+                titleContent = docContent.find(extractorDetected.titleSelector);
+            }
+            if (extractorDetected.selector) {
+                resultContent = docContent.find(extractorDetected.selector);
+            }
+            if (extractorDetected.summarySelector) {
+                summaryContent = docContent.find(extractorDetected.summarySelector);
+            }
+        } else {
+            resultContent = docContent;
         }
 
-        return resultContent.text().trim();
+        return {
+            content: this.normalize(resultContent),
+            title: this.normalize(titleContent),
+            summary: this.normalize(summaryContent)
+        };
+    }
+
+    normalize(content) {
+        let removedContent = content.find(removeselector).remove();
+        let result = content.text()
+            .replace(newlinePattern, ' ')
+            .replace(newlinePattern2, ' ')
+            .replace(tabPattern, '')
+            .replace(copyright, '')
+            .replace(copyrightsym, '');
+        if (result.length > maxLength) {
+            result = result.substring(0, maxLength);
+        }
+        return result.trim();
     }
 
     ignorePhrases(phrases) {

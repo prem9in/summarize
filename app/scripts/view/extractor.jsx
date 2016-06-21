@@ -36,6 +36,14 @@ export default class Extractor extends Base {
         return options;
     }
 
+    setCustomTitleSelector(event) {
+        this.state.selected.titleSelector = event.target.value && event.target.value.trim();
+        this.select(this.state.selected);
+    }
+    setCustomSummarySelector(event) {
+        this.state.selected.summarySelector = event.target.value && event.target.value.trim();
+        this.select(this.state.selected);
+    }
     setCustomSelector(event) {
         this.state.selected.selector = event.target.value && event.target.value.trim();
         this.select(this.state.selected);
@@ -65,6 +73,24 @@ export default class Extractor extends Base {
                     <div className="col-sm-4">
                         <div className={this.state.selected.nameKey == 'AutoDetect' ? 'displaynone' : ''} >
                             <div className="form-group">
+                                <label for="titleSelectorInput">{this.props.resources.getString("TitleSelector")}</label>
+                                <div className={this.state.selected.nameKey == 'Custom' ? 'displaynone' : 'contentSelector'}>
+                                    {this.state.selected.titleSelector && this.state.selected.titleSelector.length > 0 ? this.state.selected.titleSelector : ''}
+                                </div>
+                                <div className={this.state.selected.nameKey == 'Custom' ? 'contentSelector' : 'displaynone'}>
+                                    <input type="text" id="titleSelectorInput" onChange={this.setCustomTitleSelector.bind(this)} value={this.state.selected.titleSelector && this.state.selected.titleSelector.length > 0 ? this.state.selected.titleSelector : ''} className="sourceInput form-control" placeholder={this.props.resources.getString("TitleSelectorPlaceholder")} title={this.props.resources.getString("TitleSelectorPlaceholder")} />
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label for="summarySelectorInput">{this.props.resources.getString("SummarySelector")}</label>
+                                <div className={this.state.selected.nameKey == 'Custom' ? 'displaynone' : 'contentSelector'}>
+                                    {this.state.selected.summarySelector && this.state.selected.summarySelector.length > 0 ? this.state.selected.summarySelector : ''}
+                                </div>
+                                <div className={this.state.selected.nameKey == 'Custom' ? 'contentSelector' : 'displaynone'}>
+                                    <input type="text" id="summarySelectorInput" onChange={this.setCustomSummarySelector.bind(this)} value={this.state.selected.summarySelector && this.state.selected.summarySelector.length > 0 ? this.state.selected.summarySelector : ''} className="sourceInput form-control" placeholder={this.props.resources.getString("SummarySelectorPlaceholder")} title={this.props.resources.getString("SummarySelectorPlaceholder")} />
+                                </div>
+                            </div>
+                            <div className="form-group">
                                 <label for="selectorInput">{this.props.resources.getString("Selector")}</label>
                                 <div className={this.state.selected.nameKey == 'Custom' ? 'displaynone' : 'contentSelector'}>
                                     {this.state.selected.selector && this.state.selected.selector.length > 0 ? this.state.selected.selector : ''}
@@ -81,7 +107,6 @@ export default class Extractor extends Base {
                                 <div className={this.state.selected.nameKey == 'Custom' ? 'ignorePhrases' : 'displaynone'}>
                                     <input type="text" id="ignoreInput" onChange={this.setCustomIgnore.bind(this)} value={this.state.selected.ignorePhrases && this.state.selected.ignorePhrases.length > 0 ? this.state.selected.ignorePhrases.join(',') : ''} className="sourceInput form-control" placeholder={this.props.resources.getString("IgnorePhrasePlaceholder")} title={this.props.resources.getString("IgnorePhrasePlaceholder")} />
                                 </div>
-
                             </div>
                         </div>
                     </div>

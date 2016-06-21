@@ -17,6 +17,7 @@ class Phrases extends Base {
     defaults() {
         return {
             "KeyPhrases": [],
+            "KeyPhrasesTitle": [],
             "initialized": false,
             "Error": null
         }
@@ -27,15 +28,34 @@ class Phrases extends Base {
     }
 
     parse(response, options) {
-        if (response && response.KeyPhrasesBatch && response.KeyPhrasesBatch.length > 0) {
-            let kphrases = response.KeyPhrasesBatch[0].KeyPhrases;
-            kphrases = extractor.ignorePhrases(kphrases);
-            return {KeyPhrases: kphrases, initialized: true, Error: null};
-        } else if (response && response.Errors && response.Errors.length > 0) {
-            return {KeyPhrases: [], initialized: true, Error: response.Errors[0].Message};
+        let result = {};
+        if (response) {
+            if (response.KeyPhrasesBatch && response.KeyPhrasesBatch.length > 0) {
+                result = {KeyPhrases: [], KeyPhrasesTitle: [], initialized: true, Error: null};
+                for (let item of response.KeyPhrasesBatch) {
+                    let kphrases = extractor.ignorePhrases(item.KeyPhrases);
+                    switch (item.Id) {
+                        case "Content":
+                            result.KeyPhrases = kphrases;
+                            break;
+                        case "Title":
+                            result.KeyPhrasesTitle = kphrases;
+                            break;
+                    }
+                }
+            }
+            if (response.Errors && response.Errors.length > 0) {
+                let err = '';
+                for (let error of response.Errors) {
+                    err += ', Field: ' + error.Id + ': ' + error.Message;
+                }
+                err = err.remove(0, 1);
+                result = _.extend(result, {initialized: true, Error: err});
+            }
         } else {
-            return {KeyPhrases: [], initialized: true, Error: null};
+            result = {KeyPhrases: [], KeyPhrasesTitle: [], initialized: true, Error: null};
         }
+        return result;
     }
 
     save() {

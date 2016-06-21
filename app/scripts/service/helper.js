@@ -10,12 +10,15 @@ class Helper {
     }
 
     getTextAnalyticsReuestOptions() {
+        let model = {"Inputs": []};
+        model.Inputs.push({"Id": "Content", "Text": textDocument.get("Content") });
+        model.Inputs.push({"Id": "Title", "Text": textDocument.get("Title") });
         return {
             headers: {
                 'Authorization': 'Basic ' + appconfig.apikey,
             },
             method: 'execute',
-            model: {"Inputs": textDocument.attributes.Inputs},
+            model: model,
             contentType: 'application/json',
             dataType: 'json',
             skipCache: true

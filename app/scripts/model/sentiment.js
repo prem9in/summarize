@@ -1,5 +1,6 @@
 import Base from 'model/base';
 import helper from 'service/helper';
+import _ from 'underscore';
 
 'use strict';
 
@@ -15,7 +16,8 @@ class Sentiment extends Base {
 
     defaults() {
         return {
-           "Score": -1,
+            "Score": -1,
+            "ScoreTitle": -1,
             "initialized": false,
             "Error": null
         }
@@ -26,13 +28,35 @@ class Sentiment extends Base {
     }
 
     parse(response, options) {
-        if (response && response.SentimentBatch && response.SentimentBatch.length > 0) {
-            return {Score: response.SentimentBatch[0].Score, initialized: true, Error: null};
-        } else if (response && response.Errors && response.Errors.length > 0) {
-            return {Score: -1, initialized: true, Error: response.Errors[0].Message};
+        let result = {};
+        if (response) {
+            if (response.SentimentBatch && response.SentimentBatch.length > 0) {
+                result = {Score: -1, ScoreTitle: -1,  initialized: true, Error: null};
+                for (let item of response.SentimentBatch) {
+                    switch (item.Id) {
+                        case "Content":
+                            result.Score =  item.Score;
+                            break;
+                        case "Title":
+                            result.ScoreTitle = item.Score;
+                            break;
+                    }
+                }
+            }
+
+            if (response.Errors && response.Errors.length > 0) {
+                let err = '';
+                for (let error of response.Errors) {
+                    err += ', Field: ' + error.Id + ': ' + error.Message;
+                }
+                err = err.remove(0, 1);
+                result = _.extend(result, {initialized: true, Error: err});
+            }
         } else {
-            return {Score: -1, initialized: true, Error: null};
+            result = {Score: -1, ScoreTitle: -1, initialized: true, Error: null};
         }
+
+        return result;
     }
 
     save() {
